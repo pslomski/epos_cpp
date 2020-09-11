@@ -1,5 +1,5 @@
-#include <nr.h>
-#include "nrutil.h"
+#include <nr.hpp>
+#include <nrutil.hpp>
 
 void mrqmin(double x[], double y[], double sig[], int ndata, double a[], int ia[],
 	int ma, double** covar, double** alpha, double* chisq, fitfun_type funcs, double* alamda)
@@ -14,7 +14,7 @@ void mrqmin(double x[], double y[], double sig[], int ndata, double a[], int ia[
 		for (mfit = 0, j = 1; j <= ma; j++)
 			if (ia[j]) mfit++;
 		oneda = dmatrix(1, mfit, 1, 1);
-		*alamda = 0.001f;
+		*alamda = 0.001;
 		mrqcof(x, y, sig, ndata, a, ia, ma, alpha, beta, chisq, funcs);
 		ochisq = (*chisq);
 		for (j = 1; j <= ma; j++) atry[j] = a[j];

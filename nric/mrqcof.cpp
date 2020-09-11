@@ -1,6 +1,6 @@
-#include <nr.h>
-#include "nrutil.h"
-#include "stdio.h"
+#include <stdio.h>
+#include <nr.hpp>
+#include <nrutil.hpp>
 
 void mrqcof(double x[], double y[], double sig[], int ndata, double a[], int ia[],
 	int ma, double** alpha, double beta[], double* chisq, fitfun_type funcs)

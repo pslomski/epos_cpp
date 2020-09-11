@@ -1,4 +1,4 @@
-#include "nrutil.h"
+#include <nrutil.hpp>
 
 #define SWAP(a,b) {swap=(a);(a)=(b);(b)=swap;}
 

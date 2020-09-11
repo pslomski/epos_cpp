@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <math.h>
-#include "nr.h"
-#include "nrutil.h"
+#include <nr.hpp>
+#include <nrutil.hpp>
 #include "step1.hpp"
 #include <impulse_fun.hpp>
 #include <peak_detector_CeBr.hpp>
@@ -180,8 +180,7 @@ bool Step1::processCeBr(int buf[1600], double DC, double zeroTime, epos::VectorF
 	double yfun_min = numeric_limits<double>::max();
 	double ydat_min = yfun_min;
 	array<double, ParamCount + 1> da;
-	for (size_t i = startIndex; i < stopIndex; i++)
-	{
+	for (size_t i = startIndex; i < stopIndex; i++) {
 		double yfun;
 		double xdat = Channel::getT(i);
 		double ydat = (buf[i] - DC) / numeric_limits<short int>::max();
@@ -198,8 +197,7 @@ bool Step1::processCeBr(int buf[1600], double DC, double zeroTime, epos::VectorF
 
 	VectorFloat sig_a(a.size(), 0.0);
 	res = fit(x, y, a, sig_a);
-	if (res)
-	{
+	if (res) {
 		if (sig_a[1] > SigmaSError) {
 			res = false; // zbyt duzy blad s
 		}
@@ -248,27 +246,12 @@ bool Step1::fit(VectorFloat& x, VectorFloat& y, VectorFloat& a, VectorFloat& sig
 {
 	bool res = true;
 	const size_t MaxSteps = 100; // maksymalna liczba krokow fitowania
-
-	VectorFloat sig; // Odchylenia standardowe danych y. Przyjmujemy = 1
-	int ndata;
-	VectorInt ia;
-	int ma;// coefficient count
-
-	//standardowe odchyl. kazdego z data (przyjmuje domyslnie 1)
-	for (size_t i = 0; i < x.size(); i++) {
-		sig.push_back(1.0);
-	}
-
-	// wartosc=!=0 oznacza ze parametr ma byc dopasowywany. Wartosc 0 oznacza, ze ma byc zafiksowany na wart. pocz.
-	for (size_t i = 0; i < a.size(); i++)
-		ia.push_back(1);
-
-	ma = static_cast<int>(a.size() - 1);
-	ndata = static_cast<int>(x.size() - 1);
-	double alamda = -1; // set alamda<0 for initialization
+	VectorFloat sig(x.size(), 1.0); // Odchylenia standardowe danych y. Przyjmujemy = 1
+	VectorInt ia(x.size(), 1);
+	int ndata = static_cast<int>(x.size() - 1);
+	int ma = static_cast<int>(a.size() - 1); // coefficient count
 	double** covar = dmatrix(1, ma, 1, ma);
 	double** alpha = dmatrix(1, ma, 1, ma);
-
 	int step = 0;
 	double lambda = -1.0; // set alamda<0 for initialization
 	double chisq = 0.0;
@@ -279,8 +262,7 @@ bool Step1::fit(VectorFloat& x, VectorFloat& y, VectorFloat& a, VectorFloat& sig
 	double ochisq = chisq + 2.0;
 
 	/* Iterating with mrqmin until relative change in chisq is less than 0.001 */
-	while ((fabs((ochisq - chisq) / ochisq) > 0.00001) || (lambda >= 0.1))
-	{
+	while ((fabs((ochisq - chisq) / ochisq) > 0.00001) || (lambda >= 0.1)) {
 		step++;
 		ochisq = chisq;
 		mrqmin(x.data(), y.data(), sig.data(), ndata, a.data(), ia.data(), ma, covar, alpha, &chisq, fnImpulse, &lambda);
@@ -296,8 +278,7 @@ bool Step1::fit(VectorFloat& x, VectorFloat& y, VectorFloat& a, VectorFloat& sig
 		}
 	}
 
-	if (res)
-	{
+	if (res) {
 		/* Here we run mrqmin one more time with alambda = 0.0 to get covariant matrix, in case we want the errors */
 		lambda = 0.0;//last call with 0
 		mrqmin(x.data(), y.data(), sig.data(), ndata, a.data(), ia.data(), ma, covar, alpha, &chisq, fnImpulse, &lambda);
@@ -306,8 +287,7 @@ bool Step1::fit(VectorFloat& x, VectorFloat& y, VectorFloat& a, VectorFloat& sig
 
 		sig_a.resize(a.size());
 		sig_a[0] = chisq;
-		for (size_t i = 1; i < a.size(); i++)
-		{
+		for (size_t i = 1; i < a.size(); i++) {
 			//obliczanie bledu dopasowania parametrow a
 			sig_a[i] = ComputeSigma(chisq, covar[i][i], ndata, ma);
 			cout << "#a[" << i << "]=" << a[i] << ", sig=" << sig_a[i] << endl;

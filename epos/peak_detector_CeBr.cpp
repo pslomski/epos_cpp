@@ -31,13 +31,6 @@ namespace epos
 		return curr - start >= length;
 	}
 
-	Float nachylenie5(VectorFloat& data, int i0)
-	{
-		constexpr Float time_res_inv = 1.0 / epos::time_resolution;
-		Float XY = 2.0 * (data[i0 + 2] - data[i0 - 2]) + data[i0 + 1] - data[i0 - 1];
-		return time_res_inv * XY / 10.0;
-	}
-
 	bool PeakDetectorCeBr::next(Peak& peak)
 	{
 		while (curr < stop) {

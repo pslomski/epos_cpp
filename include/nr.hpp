@@ -1,7 +1,9 @@
-#ifndef _NR_H_
-#define _NR_H_
+#ifndef NUMERICAL_RECEPIES_HPP_INCLUDED
+#define NUMERICAL_RECEPIES_HPP_INCLUDED
 
 using Float = double;
+
+typedef void (*fitfun_type)(double, double[], double*, double[], int);
 
 #ifndef _FCOMPLEX_DECLARE_T_
 typedef struct FCOMPLEX { Float r, i; } fcomplex;
@@ -259,21 +261,11 @@ void mpsmu(unsigned char w[], unsigned char u[], int n, int iv);
 void mpsqrt(unsigned char w[], unsigned char u[], unsigned char v[], int n, int m);
 void mpsub(int* is, unsigned char w[], unsigned char u[], unsigned char v[], int n);
 
-typedef void (*fitfun_type)(double, double[], double*, double[], int);
-
-void mrqcof(Float x[], Float y[], Float sig[], int ndata, Float a[],
-	int ia[], int ma, Float** alpha, Float beta[], Float* chisq,
-	fitfun_type funcs
-	//void (*funcs)(Float, Float[], Float*, Float[], int)
-);
-
-void mrqmin(Float x[], Float y[], Float sig[], int ndata, Float a[],
-	int ia[], int ma, Float** covar, Float** alpha, Float* chisq,
-	fitfun_type funcs,
-	//void (*funcs)(Float, Float [], Float *, Float [], int),
-	Float* alamda);
-void newt(Float x[], int n, int* check,
-	void (*vecfunc)(int, Float[], Float[]));
+void mrqcof(Float x[], Float y[], Float sig[], int ndata, Float a[], int ia[], int ma,
+	Float** alpha, Float beta[], Float* chisq, fitfun_type funcs);
+void mrqmin(Float x[], Float y[], Float sig[], int ndata, Float a[], int ia[], int ma,
+	Float** covar, Float** alpha, Float* chisq, fitfun_type funcs, Float* alambda);
+void newt(Float x[], int n, int* check, void (*vecfunc)(int, Float[], Float[]));
 void odeint(Float ystart[], int nvar, Float x1, Float x2,
 	Float eps, Float h1, Float hmin, int* nok, int* nbad,
 	void (*derivs)(Float, Float[], Float[]),
@@ -474,4 +466,4 @@ void zrhqr(Float a[], int m, Float rtr[], Float rti[]);
 Float zriddr(Float(*func)(Float), Float x1, Float x2, Float xacc);
 void zroots(fcomplex a[], int m, fcomplex roots[], int polish);
 
-#endif /* _NR_H_ */
+#endif // NUMERICAL_RECEPIES_HPP_INCLUDED

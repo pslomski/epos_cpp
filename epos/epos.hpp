@@ -51,6 +51,8 @@ namespace epos
 
 	void avevar(VectorFloatIter begin, VectorFloatIter end, Float& ave, Float& var);
 
+	Float nachylenie5(VectorFloat& data, int i0);
+
 	struct SeriesStatistics {
 		Float arithmetic_mean;
 		Float variance;

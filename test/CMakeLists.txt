@@ -5,6 +5,7 @@ include_directories (
 add_executable(epos_test
     epos_test.cpp
     test_epos.cpp
+	test_fit.cpp
     test_channel.cpp
     test_data_set_bin.cpp
     test_data_set_txt.cpp

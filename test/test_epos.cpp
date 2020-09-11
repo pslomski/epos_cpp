@@ -111,6 +111,34 @@ TEST_CASE("arithmetic mean")
 	REQUIRE(v.end() - v.begin() == 0);
 }
 
+TEST_CASE("nachylenie5")
+{
+	VectorFloat v;
+
+	v = { 1, 1, 1, 1, 1 };
+	REQUIRE(nachylenie5(v, 2) == 0);
+
+	v = {1, 2, 3, 4, 5};
+	REQUIRE(nachylenie5(v, 2) == 2);
+
+	v = { 5, 4, 3, 2, 1 };
+	REQUIRE(nachylenie5(v, 2) == -2);
+
+	v = { 0.9, 2.3, 2.5, 4.1, 5 };
+	REQUIRE(nachylenie5(v, 2) == 2);
+}
+
+TEST_CASE("vector")
+{
+	int size = 3;
+	Float val = 1.0;
+	VectorFloat v(size, val);
+	REQUIRE(v.size() == size);
+	REQUIRE(v[0] == val);
+	REQUIRE(v[1] == val);
+	REQUIRE(v[2] == val);
+}
+
 /*TEST_CASE("Lookup Table"){
 	LookupTable ltexp(Channel::time.size() * 2, Channel::time.front(), Channel::time.back(), exp);
 	for(Float t: Channel::time)

@@ -55,6 +55,14 @@ void epos::avevar(VectorFloatIter begin, VectorFloatIter end, Float& ave, Float&
 	var = accum / (count - 1);
 }
 
+
+Float epos::nachylenie5(VectorFloat& data, int i0)
+{
+	constexpr Float time_res_inv = 1.0 / epos::time_resolution;
+	Float XY = 2.0 * (data[i0 + 2] - data[i0 - 2]) + data[i0 + 1] - data[i0 - 1];
+	return time_res_inv * XY / 10.0;
+}
+
 void SeriesStatistics::compute_from_range(VectorFloatIter begin, VectorFloatIter end)
 {
 	arithmetic_mean = 0.0;

@@ -1,6 +1,6 @@
 #include <math.h>
-#include "stdio.h"
-#include "nrutil.h"
+#include <stdio.h>
+#include <nrutil.hpp>
 
 #define SWAP(a,b) {temp=(a);(a)=(b);(b)=temp;}
 
@@ -26,7 +26,8 @@ void gaussj(double** a, int n, double** b, int m)
 							icol = k;
 						}
 					}
-					else if (ipiv[k] > 1) nrerror("gaussj: Singular Matrix-1");
+					else if (ipiv[k] > 1)
+						nrerror("gaussj: Singular Matrix-1");
 				}
 		++(ipiv[icol]);
 		if (irow != icol) {
@@ -35,7 +36,8 @@ void gaussj(double** a, int n, double** b, int m)
 		}
 		indxr[i] = irow;
 		indxc[i] = icol;
-		if (a[icol][icol] == 0.0) nrerror("gaussj: Singular Matrix-2");
+		if (a[icol][icol] == 0.0)
+			nrerror("gaussj: Singular Matrix-2");
 		pivinv = 1.0 / a[icol][icol];
 		a[icol][icol] = 1.0;
 		for (l = 1; l <= n; l++) a[icol][l] *= pivinv;
