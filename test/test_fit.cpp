@@ -9,15 +9,47 @@ using namespace epos;
 void linear_fun(double x, double a[], double* y, double dyda[], int na)
 {
 	*y = a[1] * x + a[2];
-	dyda[1] = a[1];
+	dyda[1] = x;
 	dyda[2] = 1;
+}
+
+TEST_CASE("linear_fun")
+{
+	Float x, y;
+	VectorFloat a{ 0, 1.0, 0.0 };
+	VectorFloat dyda{ 0, 0, 0 };
+
+	x = 0.0;
+	linear_fun(x, a.data(), &y, dyda.data(), 2);
+	REQUIRE(y == Approx(0.0));
+	REQUIRE(dyda[1] == Approx(x));
+	REQUIRE(dyda[2] == Approx(1.0));
+
+	x = 1.0;
+	linear_fun(x, a.data(), &y, dyda.data(), 2);
+	REQUIRE(y == Approx(1.0));
+	REQUIRE(dyda[1] == Approx(x));
+	REQUIRE(dyda[2] == Approx(1.0));
+
+	a = { 0, -1.0, 0.0 };
+	x = 0.0;
+	linear_fun(x, a.data(), &y, dyda.data(), 2);
+	REQUIRE(y == Approx(0.0));
+	REQUIRE(dyda[1] == Approx(x));
+	REQUIRE(dyda[2] == Approx(1.0));
+
+	x = 1.0;
+	linear_fun(x, a.data(), &y, dyda.data(), 2);
+	REQUIRE(y == Approx(-1.0));
+	REQUIRE(dyda[1] == Approx(x));
+	REQUIRE(dyda[2] == Approx(1.0));
 }
 
 void fill_matrix(double** alpha, int ma)
 {
 	for (int j = 1; j <= ma; j++) {
 		for (int k = 1; k <= ma; k++)
-			alpha[j][k] = j * k;
+			alpha[j][k] = 10 * j + k;
 	}
 }
 
@@ -26,10 +58,10 @@ TEST_CASE("fill_matrix")
 	int ma = 2;
 	Float** m = dmatrix(1, ma, 1, ma);
 	fill_matrix(m, ma);
-	REQUIRE(m[1][1] == 1.0);
-	REQUIRE(m[1][2] == 2.0);
-	REQUIRE(m[2][1] == 2.0);
-	REQUIRE(m[2][2] == 4.0);
+	REQUIRE(m[1][1] == 11.0);
+	REQUIRE(m[1][2] == 12.0);
+	REQUIRE(m[2][1] == 21.0);
+	REQUIRE(m[2][2] == 22.0);
 	free_dmatrix(m, 1, ma, 1, ma);
 }
 
@@ -53,38 +85,6 @@ TEST_CASE("mrqmin")
 	mrqmin(x, y, sig, ndata, a, ia, ma, covar, alpha, &chisq, linear_fun, &lambda);
 	free_dmatrix(alpha, 1, ma, 1, ma);
 	free_dmatrix(covar, 1, ma, 1, ma);
-}
-
-TEST_CASE("linear_fun")
-{
-	Float x, y;
-	VectorFloat a{ 0, 1.0, 0.0 };
-	VectorFloat dyda{ 0, 0, 0 };
-
-	x = 0.0;
-	linear_fun(x, a.data(), &y, dyda.data(), 2);
-	REQUIRE(y == Approx(0.0));
-	REQUIRE(dyda[1] == Approx(a[1]));
-	REQUIRE(dyda[2] == Approx(1.0));
-
-	x = 1.0;
-	linear_fun(x, a.data(), &y, dyda.data(), 2);
-	REQUIRE(y == Approx(1.0));
-	REQUIRE(dyda[1] == Approx(a[1]));
-	REQUIRE(dyda[2] == Approx(1.0));
-
-	a = { 0, -1.0, 0.0 };
-	x = 0.0;
-	linear_fun(x, a.data(), &y, dyda.data(), 2);
-	REQUIRE(y == Approx(0.0));
-	REQUIRE(dyda[1] == Approx(a[1]));
-	REQUIRE(dyda[2] == Approx(1.0));
-
-	x = 1.0;
-	linear_fun(x, a.data(), &y, dyda.data(), 2);
-	REQUIRE(y == Approx(-1.0));
-	REQUIRE(dyda[1] == Approx(a[1]));
-	REQUIRE(dyda[2] == Approx(1.0));
 }
 
 TEST_CASE("Fit linear_fun")
